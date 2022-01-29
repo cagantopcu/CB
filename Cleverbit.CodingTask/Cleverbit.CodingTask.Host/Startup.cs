@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using System.IO;
+using Cleverbit.CodingTask.Contract;
+using Cleverbit.CodingTask.Repository;
 
 namespace Cleverbit.CodingTask.Host
 {
@@ -31,6 +33,7 @@ namespace Cleverbit.CodingTask.Host
                 options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddSingleton<IHashService>(new HashService(configuration.GetSection("HashSalt").Get<string>()));
+            services.AddTransient<IMatchRepository, MatchRepository>();
 
             services.AddControllers();
 
