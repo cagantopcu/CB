@@ -40,13 +40,24 @@ namespace Cleverbit.CodingTask.Host.Controllers
         [HttpGet("GetMyMatches")]
         public async Task<List<Match>> GetMyMatches()
         {
-            int currentUserId;
-            int.TryParse(User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value, out currentUserId);
-
-            var matches = await _matchRepository.GetMatchesByUserId(currentUserId);
+            var matches = await _matchRepository.GetMatchesByUserId(GetCurrentUser());
             return matches;
         }
 
+
+        [HttpPost("Match")]
+        public async Task<int> Match(int matchDetailId, short number)
+        {
+            var result = await _matchRepository.UpdateMatchDetail(matchDetailId, GetCurrentUser(), number);
+            return result;
+        }
+
+        private int GetCurrentUser()
+        {
+            int currentUserId;
+            int.TryParse(User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value, out currentUserId);
+            return currentUserId;
+        }
     }
 
 }
